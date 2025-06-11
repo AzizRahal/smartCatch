@@ -17,7 +17,7 @@ AI-powered chat assistant to summarize, suggest actions, and manage calendar eve
 ## Getting Started
 
 ```bash
-git clone https://github.com/your-username/smart-catch.git
-cd smart-catch
+git clone https://github.com/your-username/smartCatch.git
+cd smartCatch
 npm install
 npm run dev

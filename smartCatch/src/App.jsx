@@ -1,4 +1,5 @@
-// Firebase + App + UI (Self-contained components)
+// App.tsx — Full App Page with Firebase + UI + Routing
+
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { initializeApp } from "firebase/app";
@@ -68,11 +69,13 @@ const Input = (props) => (
   />
 );
 
+// Messages Page
 function MessagesPage() {
   const [search, setSearch] = useState("");
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showAiOptions, setShowAiOptions] = useState(false);
 
   const fetchMessages = async () => {
     const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
@@ -124,12 +127,41 @@ function MessagesPage() {
           </Button>
         </div>
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
         <Input
           placeholder="Paste message here..."
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => {
+            setInput(e.target.value);
+            setShowAiOptions(e.target.value.length > 0);
+          }}
         />
+        {showAiOptions && (
+          <div className="relative">
+            <button
+              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700"
+              onClick={() => setShowAiOptions((prev) => !prev)}
+            >
+              <Sparkles className="w-4 h-4 text-blue-500" />
+            </button>
+            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-md z-10">
+              <ul className="text-sm text-left text-gray-700 dark:text-gray-200">
+                <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                  Open AI Generator
+                </li>
+                <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                  Continue Writing
+                </li>
+                <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                  Improve Writing
+                </li>
+                <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                  Summarize
+                </li>
+              </ul>
+            </div>
+          </div>
+        )}
         <Button onClick={handleAdd} disabled={loading}>
           {loading ? (
             <Loader className="w-4 h-4 animate-spin" />
@@ -140,6 +172,7 @@ function MessagesPage() {
           )}
         </Button>
       </div>
+
       {filtered.length === 0 ? (
         <p className="text-sm text-gray-500">
           No messages to display. Add one to begin.
@@ -161,6 +194,7 @@ function MessagesPage() {
   );
 }
 
+// Summary Page
 function SummaryPage() {
   const summaries = [
     {
@@ -200,8 +234,8 @@ function SummaryPage() {
 
 function CalendarPage() {
   return (
-    <div className="p-4 max-w-3xl mx-auto space-y-4">
-      <h1 className="text-xl font-bold flex items-center gap-2">
+    <div className="p-4 max-w-3xl mx-auto">
+      <h1 className="text-xl font-bold mb-4 flex items-center gap-2">
         <Calendar className="w-5 h-5" /> Calendar
       </h1>
       <Card>
@@ -251,11 +285,11 @@ function SettingsPage() {
   );
 }
 
-function App() {
+export default function App() {
   useDarkMode();
   return (
     <Router>
-      <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white pb-16">
+      <div className="min-h-screen bg-white dark:bg-green text-black dark:text-white pb-16">
         <Routes>
           <Route path="/" element={<SummaryPage />} />
           <Route path="/messages" element={<MessagesPage />} />
@@ -264,23 +298,23 @@ function App() {
           <Route path="/settings" element={<SettingsPage />} />
         </Routes>
         <nav className="fixed bottom-0 w-full flex justify-around border-t bg-white dark:bg-black py-2">
-          <Link to="/messages" className="text-xs text-center">
+          <Link to="/messages" className="text-xs text-center flex flex-col items-center">
             <MessageSquare className="h-5 w-5" />
             Messages
           </Link>
-          <Link to="/calendar" className="text-xs text-center">
+          <Link to="/calendar" className="text-xs text-center flex flex-col items-center">
             <Calendar className="h-5 w-5" />
             Calendar
           </Link>
-          <Link to="/" className="text-xs text-center">
+          <Link to="/" className="text-xs text-center flex flex-col items-center">
             <Sparkles className="h-5 w-5" />
             Summary
           </Link>
-          <Link to="/profile" className="text-xs text-center">
+          <Link to="/profile" className="text-xs text-center flex flex-col items-center">
             <User className="h-5 w-5" />
             Profile
           </Link>
-          <Link to="/settings" className="text-xs text-center">
+          <Link to="/settings" className="text-xs text-center flex flex-col items-center">
             <Settings className="h-5 w-5" />
             Settings
           </Link>
@@ -289,5 +323,3 @@ function App() {
     </Router>
   );
 }
-
-export default App;

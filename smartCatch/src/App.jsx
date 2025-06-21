@@ -198,55 +198,70 @@ function SummaryPage() {
   );
 }
 
+
 function CalendarPage() {
+  // Calendar data matching your example
+  const calendarData = [
+    { date: 1, day: 'SUN', activities: ['Design'] },
+    { date: 2, day: 'MON', activities: ['Development', 'Edit file'] },
+    { date: 3, day: 'TUE', activities: ['Development', 'Note taking'] },
+    { date: 4, day: 'WED', activities: ['Freebie'] },
+    { date: 5, day: 'THUR', activities: ['Note taking'] },
+    { date: 8, day: 'SUN', activities: ['Design'] },
+    { date: 9, day: 'MON', activities: ['Blog'] },
+    { date: 10, day: 'TUE', activities: ['Design', 'Note taking'] },
+    { date: 11, day: 'WED', activities: ['Development'] },
+    { date: 12, day: 'THUR', activities: ['Edit file'] },
+    { date: 15, day: 'SUN', activities: [] },
+    { date: 16, day: 'MON', activities: [] },
+    { date: 17, day: 'TUE', activities: [] },
+    { date: 18, day: 'WED', activities: [] },
+    { date: 19, day: 'THUR', activities: [] }
+  ];
+
   return (
     <div className="p-4 max-w-3xl mx-auto space-y-4">
-      <h1 className="text-xl font-bold flex items-center gap-2">
-        <Calendar className="w-5 h-5" /> Calendar
-      </h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl font-bold flex items-center gap-2">
+          <Calendar className="w-5 h-5" /> Content Calendar with Auto layout
+        </h1>
+        <span className="text-sm text-gray-500">25K+ used</span>
+      </div>
+      
       <Card>
-        <CardContent>
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            This is a placeholder for the calendar.
-          </p>
-          <div className="grid grid-cols-7 gap-2 mt-4">
-            {[...Array(28)].map((_, i) => (
-              <div
-                key={i}
-                className="h-20 border rounded flex items-center justify-center dark:bg-gray-800"
+        <CardContent className="p-4">
+          {/* Day headers */}
+          <div className="grid grid-cols-5 gap-2 mb-2">
+            {['SUN', 'MON', 'TUE', 'WED', 'THUR'].map((day) => (
+              <div key={day} className="text-center font-medium text-sm py-2">
+                {day}
+              </div>
+            ))}
+          </div>
+
+          {/* Calendar days */}
+          <div className="grid grid-cols-5 gap-2">
+            {calendarData.map((day) => (
+              <div 
+                key={day.date} 
+                className="border rounded-md p-2 min-h-24 dark:bg-gray-800"
               >
-                {i + 1}
+                <div className="font-bold text-sm mb-1">{day.date}</div>
+                <div className="space-y-1">
+                  {day.activities.map((activity, index) => (
+                    <div 
+                      key={index}
+                      className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 rounded"
+                    >
+                      {activity}
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
-    </div>
-  );
-}
-
-function ProfilePage() {
-  return (
-    <div className="p-4 max-w-3xl mx-auto">
-      <h1 className="text-xl font-bold mb-4 flex items-center gap-2">
-        <User className="w-5 h-5" /> Profile
-      </h1>
-      <p className="text-sm text-gray-600 dark:text-gray-300">
-        Edit your personal preferences here.
-      </p>
-    </div>
-  );
-}
-
-function SettingsPage() {
-  return (
-    <div className="p-4 max-w-3xl mx-auto">
-      <h1 className="text-xl font-bold mb-4 flex items-center gap-2">
-        <Settings className="w-5 h-5" /> Settings
-      </h1>
-      <p className="text-sm text-gray-600 dark:text-gray-300">
-        Application settings and configurations will be added here.
-      </p>
     </div>
   );
 }
@@ -260,8 +275,7 @@ function App() {
           <Route path="/" element={<SummaryPage />} />
           <Route path="/messages" element={<MessagesPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+        
         </Routes>
         <nav className="fixed bottom-0 w-full flex justify-around border-t bg-white dark:bg-black py-2">
           <Link to="/messages" className="text-xs text-center">
@@ -276,14 +290,7 @@ function App() {
             <Sparkles className="h-5 w-5" />
             Summary
           </Link>
-          <Link to="/profile" className="text-xs text-center">
-            <User className="h-5 w-5" />
-            Profile
-          </Link>
-          <Link to="/settings" className="text-xs text-center">
-            <Settings className="h-5 w-5" />
-            Settings
-          </Link>
+          
         </nav>
       </div>
     </Router>
